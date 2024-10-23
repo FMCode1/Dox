@@ -1,19 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>{{ title }}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autocomplete Example</title>
+    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
 
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        #tags {
+            width: 100%;
+            max-width: 400px;
+            padding: 10px;
+            margin: 20px auto;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        #tags:focus {
+            border-color: #007BFF;
+            outline: none;
+        }
+
+        .ui-autocomplete {
+            max-height: 200px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            z-index: 1000;
+        }
+
+        .ui-menu-item {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .ui-menu-item:hover {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        .message {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #555;
+        }
+
+        #doc-preview {
+            width: 100%;
+            max-width: 800px;
+            height: 400px;
+            margin: 20px auto;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            display: none; /* Initially hidden */
+        }
+    </style>
+</head>
 <body>
-    <div class="App">
-        <header class="App-header">
-            <img src="{{ url_for('static', filename='Octocat.png') }}" class="App-logo" alt="logo" />
-            <p>
-                GitHub Codespaces <span class="heart">♥️</span> Flask
-            </p>
-            <p class="small">
-                Edit <code>templates/index.html</code> and refresh to see your changes!
-            </p>
-        </header>
-    </div>
-</body>
+    <h1>Welcome to Dox</h1>
+    <h3>Find the official documentation for a programming language</h3>
+    <input type="text" id="tags" placeholder="Search for a programming language...">
+    <div class="message" id="message"></div>
+    <iframe id="doc-preview" src="" frameborder="0"></iframe>
 
+    <script>
+        $(function() {
+            var languageUrls = {
+                "C++": "https://cplusplus.com/",
+                "Python": "https://docs.python.org/3/",
+                "Java": "https://docs.oracle.com/en/java/javase/11/docs/api/index.html",
+                "JavaScript": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference",
+                "Ruby": "https://www.ruby-lang.org/en/documentation/",
+                "PHP": "https://www.php.net/docs.php",
+                "Go": "https://golang.org/doc/",
+                "C#": "https://docs.microsoft.com/en-us/dotnet/csharp/",
+                "Swift": "https://developer.apple.com/documentation/swift",
+                "Kotlin": "https://kotlinlang.org/docs/reference/",
+                // Add more languages and their URLs here
+            };
+
+            var availableTags = Object.keys(languageUrls);
+            
+            $("#tags").autocomplete({
+                source: availableTags,
+                select: function(event, ui) {
+                    $("#message").text("You selected: " + ui.item.value).fadeIn().delay(2000).fadeOut();
+                    // Set the iframe source to the documentation page
+                    var selectedUrl = languageUrls[ui.item.value];
+                    $("#doc-preview").attr("src", selectedUrl).show(); // Show the iframe
+                }
+            });
+        });
+    </script>
+</body>
 </html>
